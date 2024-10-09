@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 function get_user(object $pdo){
@@ -28,8 +27,7 @@ function user_table_actions(object $pdo){
         $stmt->bindParam(':role', $role);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        header("Location: admin_landing.php");
-        header("Location: admin_landing.php?delete=success");
+        header("Location: admin_landing.php?update=success");
 
         if(!isset($_POST['check'])){
             $sql = "UPDATE user SET locked = 0, attempt = 0 WHERE id = :id";
@@ -56,9 +54,13 @@ function user_table_actions(object $pdo){
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        header("Location: admin_landing.php");
+        header("Location: admin_landing.php?delete-success");
     }
-    else if(isset($_POST['no'])){
-        header("Location: admin_landing.php");
+}
+
+function cancle_delete(){
+    
+    if(isset($_POST['no'])){
+        return true;
     }
 }

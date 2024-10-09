@@ -1,5 +1,7 @@
 <?php
 include '../utils/handle_admin_page.php';
+include '../utils/db.connection.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,11 +46,14 @@ include '../utils/handle_admin_page.php';
             </div>
         </div>
         <form class="main-container" method="POST" action="<?php echo $update_user ?>">
-            <table>
+            
+            <div class="wrapper-table" >
+            <table >
                     <?php 
                         if($result){
                             ?>
                             
+                <thead>
                 <tr>
                     <td>#</td>
                     <td>ID</td>
@@ -59,9 +64,15 @@ include '../utils/handle_admin_page.php';
                     <td>Locked</td>
                     <td>Action</td>
                 </tr>
+                </thead>
+                </table>
+                </div>
+                <div class="body-container" >
+                <table>
+                <tbody class="table-body">
                 <?php
                 $count = 1;
-                            foreach($result as $row){
+                            foreach($resultRecords as $row){
                                 $num = $count++;
                                 ?>
                                 <tr class="row">
@@ -228,7 +239,7 @@ include '../utils/handle_admin_page.php';
                                         }
                                         else{
                                             ?>
-                                                <a class="edit"  href="admin_landing.php?id=<?php echo $row["id"] ?>">
+                                                <a class="edit"  href="admin_landing.php?page_no=<?= $page_no ?>&id=<?= $row['id'] ?>">
                                                     <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
                                                 </a>
                                                 <?php
@@ -238,7 +249,7 @@ include '../utils/handle_admin_page.php';
                                     else{
                                         if(!isset($_GET['delete_id'])){
                                             ?>
-                                        <a class="edit"  href="admin_landing.php?id=<?php echo $row["id"] ?>">
+                                        <a class="edit"  href="admin_landing.php?page_no=<?= $page_no ?>&id=<?= $row['id'] ?>">
                                             <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
                                         </a>
                                         <?php
@@ -258,7 +269,7 @@ include '../utils/handle_admin_page.php';
                                         }
                                         else{
                                             ?>
-                                            <a class="delete" href="admin_landing.php?delete_id=<?php echo $row["id"] ?>"> 
+                                            <a class="delete" href="admin_landing.php?page_no=<?= $page_no ?>&delete_id=<?= $row['id'] ?>"> 
                                             <img src="../../../public/images/svg/delete.svg" alt="edit" height="23" width="23" >
                                             </a>
                                             <?php
@@ -267,7 +278,7 @@ include '../utils/handle_admin_page.php';
                                     else{
                                         if(!isset($_GET['delete_id'])){
                                             ?>
-                                            <a class="delete" href="admin_landing.php?delete_id=<?php echo $row["id"] ?>"> 
+                                            <a class="delete"  href="admin_landing.php?page_no=<?= $page_no ?>&delete_id=<?= $row['id'] ?>"> 
                                             <img src="../../../public/images/svg/delete.svg" alt="edit" height="23" width="23" >
                                             </a>
                                             <?php
@@ -286,7 +297,7 @@ include '../utils/handle_admin_page.php';
                                         }
                                         else{
                                             ?>
-                                            <a class="edit"  href="admin_landing.php?id=<?php echo $row["id"] ?>">
+                                            <a class="edit"  href="admin_landing.php?page_no=<?= $page_no ?>&id=<?= $row['id'] ?>">
                                                 <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
                                             </a>
                                             <?php
@@ -307,7 +318,7 @@ include '../utils/handle_admin_page.php';
                                         else{
                                             ?>
                                                 
-                                                <a class="delete" href="admin_landing.php?delete_id=<?php echo $row["id"] ?>"> 
+                                                <a class="delete" href="admin_landing.php?page_no=<?= $page_no ?>&delete_id=<?= $row['id'] ?>"> 
                                                 <img src="../../../public/images/svg/delete.svg" alt="edit" height="23" width="23" >
                                                 </a>
                                                 <?php
@@ -323,8 +334,10 @@ include '../utils/handle_admin_page.php';
                                     </td>
                                 </tr>
                                 <?php
+                                
                             }
                         }
+                        
                         else{
                             ?>
                             <tr>
@@ -332,9 +345,28 @@ include '../utils/handle_admin_page.php';
                             </tr>
                             <?php
                         }
+                        ?>
+                        </tbody>
+                        </table>
+                        </div>
+            
+            <nav>
+            <div class="pagination" >
+                    
+                    <a <?= ($page_no > 1) ? 'href=?page_no='.$previous_pagee : '' ?>>Previous</a>
+                    <?php 
+                    for($counter = 1; $counter <= $total_no_of_pages; $counter++){?>
+                    <a href="?page_no=<?= $counter ?>"><?= $counter ?></a>
+            
+                    <?php 
+                    }
                     ?>
-            </table>
-                    </form>
+                    
+                    <a <?= ($page_no <  $total_no_of_pages) ? 'href=?page_no='.$next_page : '' ?>>Next</a>
+                
+                </div>
+            </nav>
+            </form>
     </div>
 </div>
 
