@@ -27,7 +27,6 @@ function user_table_actions(object $pdo){
         $stmt->bindParam(':role', $role);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        header("Location: admin_landing.php?update=success");
 
         if(!isset($_POST['check'])){
             $sql = "UPDATE user SET locked = 0, attempt = 0 WHERE id = :id";
@@ -41,12 +40,19 @@ function user_table_actions(object $pdo){
             $stmt->bindParam(':id', $id);
             $stmt->execute();
         }
+        return true;
+    }
+}
 
+function cancle_delete(){
+    
+    if(isset($_POST['no'])){
+        return true;
     }
-    else if(isset($_POST['cancel'])){
-        header("Location: admin_landing.php");
-    }
-    else if(isset($_POST['yes'])){
+}
+
+function is_yes(object $pdo){
+    if(isset($_POST['yes'])){
         if(isset($_GET['delete_id'])){
             $id = $_GET['delete_id'];
         }
@@ -54,13 +60,12 @@ function user_table_actions(object $pdo){
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        header("Location: admin_landing.php?delete-success");
+        return true;
     }
 }
 
-function cancle_delete(){
-    
-    if(isset($_POST['no'])){
+function is_cancel(){
+    if(isset($_POST['cancel'])){
         return true;
     }
 }

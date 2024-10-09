@@ -58,21 +58,22 @@ body .container{
 }
 
 .secondary-container{
+    height: 100%;
     display: flex;
     flex-direction: row;
-    height: 100%;
     padding: 0 1rem;
     padding-bottom: 6rem;
 }
 
 .secondary-container .sidebar{
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 3rem;
-    margin-top: 2rem;
+    margin-top: 3rem;
     width: 15rem;
     justify-content: space-between;
-    padding: 2rem 0;
+    padding-bottom: 3rem;
 }
 
 .option-container{
@@ -142,20 +143,21 @@ body .container{
 
 .main-container{
     width: 100%;
-    height: 100%;
+    height: 85vh;
     background: var(--third-color);
     padding: 1.5rem;
     padding-bottom: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0;
+    border-radius: 10px;
+    gap: 2rem;
+    justify-content: center;
 }
 
-.wrapper-table{
-    height: fit-content;
-    width: 100%;
-    margin-bottom: 0;
+.wrap{
+    overflow-y: auto;
 }
+
 
 .main-container table{
     width: 100%;
@@ -170,9 +172,12 @@ body .container{
 
 .body-container table{
     width: 100%;
+    height: 100%;
 }
 
-
+table{
+    width: 100%;
+}
 
 .main-container tr{
     height: fit-content;
@@ -188,9 +193,6 @@ body .container{
     width: fit-content;
 }
 
-tbody{
-    width: 100%;
-}
 .main-container table .row{
     width: 100%;
     background-color: var(--body-color);
@@ -373,4 +375,86 @@ tbody{
     font-weight: 600;
     color: var(--secondary-color);
     cursor: pointer;
+}
+
+
+.pagination .disable{
+    cursor: not-allowed;
+    filter: brightness(.7);
+}
+
+.pagination .selected_page{
+    background-color: var(--secondary-color);
+    color: var(--body-color);
+}
+
+.pagination a{
+    background-color: var(--body-color);
+    padding: .2rem .7rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: var(--secondary-color);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+select{
+    background-color: var(--body-color);
+    font-size: .9rem;
+    padding: .2rem .4rem;
+    border: 0;
+    border-radius: 5px;
+    color: var(--secondary-color);
+    cursor: pointer;
+    outline: none;
+}
+
+#filter{
+    background-color: var(--body-color);
+    border: 0;
+    color: var(--secondary-color);
+    padding: .5rem;
+    aspect-ratio: 1;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+   
+}
+
+#filter img{
+    filter: brightness(0) saturate(100%) invert(25%) sepia(5%) saturate(4269%) hue-rotate(334deg) brightness(99%) contrast(82%);
+}
+
+.dropdown{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+option{
+    cursor: pointer;
+}
+
+/* Custom scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    background-color: transparent; /* Background color of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color); /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners for the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    
+    cursor: grab;
 }

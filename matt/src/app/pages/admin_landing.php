@@ -46,9 +46,17 @@ include '../utils/db.connection.php';
             </div>
         </div>
         <form class="main-container" method="POST" action="<?php echo $update_user ?>">
-            
-            <div class="wrapper-table" >
-            <table >
+            <div class="dropdown">
+                <select name="num" id="num">
+                <option value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+                <button id="filter" type="submit" name="filter">
+                    <img src="../../../public/images/svg/filter.svg" alt="..." height="20" width="20">
+                </button>
+            </div>
+            <div class="wrap" >
+            <table>
                     <?php 
                         if($result){
                             ?>
@@ -65,10 +73,6 @@ include '../utils/db.connection.php';
                     <td>Action</td>
                 </tr>
                 </thead>
-                </table>
-                </div>
-                <div class="body-container" >
-                <table>
                 <tbody class="table-body">
                 <?php
                 $count = 1;
@@ -77,7 +81,7 @@ include '../utils/db.connection.php';
                                 ?>
                                 <tr class="row">
                                     
-                                    <td><?php echo $num ?></td>
+                                    <td>#<?php echo $num ?></td>
                                     <td  style="<?php 
                                 if(isset($_GET['delete_id'])){
                                     if($_GET['delete_id'] == $row['id']){
@@ -353,19 +357,31 @@ include '../utils/db.connection.php';
             <nav>
             <div class="pagination" >
                     
-                    <a <?= ($page_no > 1) ? 'href=?page_no='.$previous_pagee : '' ?>>Previous</a>
+                    <a class="<?= ($page_no <= 1) ? "disable" : ""  ?>" <?= ($page_no > 1) ? 'href=?page_no='.$previous_pagee : '' ?>><</a>
                     <?php 
                     for($counter = 1; $counter <= $total_no_of_pages; $counter++){?>
-                    <a href="?page_no=<?= $counter ?>"><?= $counter ?></a>
-            
+                    <a class="<?php
+                    if(isset($_GET['page_no'])){
+                        if($_GET['page_no'] == $counter){
+                            echo "selected_page";
+                        }
+                        
+                    }
+                    else{
+                        if($counter === 1){
+                            echo "selected_page";
+                        }
+                    }
+                    ?>" href="?page_no=<?= $counter ?>"><?= $counter ?></a>
                     <?php 
                     }
                     ?>
                     
-                    <a <?= ($page_no <  $total_no_of_pages) ? 'href=?page_no='.$next_page : '' ?>>Next</a>
+                    <a class="<?= ($page_no >= $total_no_of_pages) ? "disable" : "" ?>" <?= ($page_no <  $total_no_of_pages) ? 'href=?page_no='.$next_page : '' ?>>></a>
                 
-                </div>
+            </div>
             </nav>
+            
             </form>
     </div>
 </div>

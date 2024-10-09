@@ -2,7 +2,7 @@
 
 include 'db.connection.php';
 include '../utils/MVC/admin_page/admin_page.model.php';
-
+session_start();
 $result = get_user($pdo);
 
 $update_user = user_table_actions($pdo);
@@ -14,7 +14,11 @@ if(isset($_GET['page_no']) && $_GET['page_no'] !== ""){
     $page_no = 1;
 }
 
-$total_records_per_page = 10; // number of show pages
+if(isset($_POST['filter'])){
+    $page_records = intval($_POST['num']);
+    $_SESSION['pages'] = $page_records;
+}
+$total_records_per_page = $_SESSION['pages']; // default
 $offset = ($page_no - 1) * $total_records_per_page;
 $previous_pagee = $page_no - 1;
 $next_page = $page_no + 1;
@@ -41,5 +45,14 @@ if(isset($_POST['logout'])){
 
 
 if(cancle_delete()){
+    header("Location: admin_landing.php?page_no=".$page_no."");
+}
+if(is_yes($pdo)){
     header("Location: admin_landing.php?page_no=".$page_no);
+}
+if(is_cancel()){
+    header("Location: admin_landing.php?page_no=".$page_no);
+}
+if(user_table_actions($pdo)){
+    return header("Location: admin_landing.php?page_no=".$page_no."&update=success");
 }
