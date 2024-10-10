@@ -101,7 +101,7 @@ if (isset($_POST['input'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the posted data
     $username = isset($_POST['username']) ? $_POST['username'] : "";
-    $id = isset($_POST['id']) ? $_POST['id'] : "";
+    $id =  isset($_POST['id']) ? $_POST['id'] : "";
 
     try {
         // Prepare the update statement
@@ -112,15 +112,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Execute the statement
         if ($stmt->execute()) {
-            json_encode(['message' => 'Username updated successfully!']);
+            echo json_encode(['message' => 'Username updated successfully!']);
+            exit;
         } else {
-            json_encode(['message' => 'Failed to update username.']);
+            echo json_encode(['message' => 'Failed to update username.']);
+            exit;
         }
     } catch (PDOException $e) {
-        json_encode(['message' => 'Error: ' . $e->getMessage()]);
+        echo json_encode(['message' => 'Error: ' . $e->getMessage()]);
+        exit;
     }
-} else {
-    json_encode(['message' => 'Invalid request method.']);
 }
 
 

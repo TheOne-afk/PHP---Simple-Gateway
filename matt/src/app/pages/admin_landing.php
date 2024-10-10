@@ -390,13 +390,12 @@ include '../utils/db.connection.php';
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script type="text/javascript" >
+<script >
     /* Ajaw */
     $(document).ready(function(){ // first it add a function to the document, means it is ready
        /* Search AJAX */
         $('#search').keyup(function(){ // getting the events in input, gettings the keys
             let input = $(this).val(); // $(this) - this element | val() - get value
-            // alert(input);
 
             if(input != ""){ // if the input is empty the perform this
                 $.ajax({ // and by using the ajax method is like a object
@@ -419,6 +418,11 @@ include '../utils/db.connection.php';
             var currentUsername = $usernameCell.text();
 
             $usernameCell.html('<input type="text" id="inputUsername" value="' + currentUsername + '" />');
+            $usernameCell.find('input').on('keydown', function(event) {
+            if (event.key === "Enter") { // Check if the Enter key is pressed
+                event.preventDefault(); // Prevent the default action (form submission)
+            }
+        });
             $this.hide(); // Hide the edit button
             $this.siblings(".save-button").show(); // Show the save button
         })
@@ -426,31 +430,28 @@ include '../utils/db.connection.php';
         /* Saved */
         $(document).on("click", ".save-button", function(event) {
             event.preventDefault();
-            var $this = $(this);
-            var $usernameCell = $this.closest("tr").find(".username");
-            var newUsername = $usernameCell.find("input").val();
-            var userId = $this.closest("tr").find(".id").text(); // Get the user ID from the table
-            alert(newUsername);
-            // Send the new username and user ID to your server via AJAX
-            $.ajax({
-                url: '../utils/handle_admin_page.php', // Path to your PHP file
-                type: 'POST',
-                data: { username: newUsername, id: userId }, // Include user ID
-                dataType: 'json', // Expect a JSON response
-                success: function(response) {
-                    // Handle the response from the server
-                    console.log(response.message);
-                    // Update the username cell with the new value
-                    $usernameCell.html(newUsername);
-                    $this.hide(); // Hide the save button
-                    $this.siblings(".edit-button").show(); // Show the edit button
-                },
-                error: function(xhr) {
-                    // Handle errors
-                    console.error(xhr.responseJSON.message);
-                }
-            });
-        });
+    var $this = $(this);
+    var $usernameCell = $this.closest("tr").find(".username");
+    var newUsername = $usernameCell.find("input").val();
+    var userId = $this.closest("tr").find(".id").text(); // Get the user ID from the table
+
+    // Send the new username and user ID to your server via AJAX
+    $.ajax({
+        url: '../utils/handle_admin_page.php', // Path to your PHP file
+        type: 'POST',
+        data: { username: newUsername, id: userId }, // Include user ID
+        dataType: 'json', // Expect a JSON response
+        success: function(response) {
+            // Update the username cell with the new value
+            $usernameCell.html(newUsername);
+            $this.hide(); // Hide the save button
+            $this.siblings(".edit-button").show(); // Show the edit button
+        },
+        error: function(xhr) {
+        console.error(xhr.responseJSON.message); // Handle errors
+    }
+    });
+});
     })
 </script>
     
