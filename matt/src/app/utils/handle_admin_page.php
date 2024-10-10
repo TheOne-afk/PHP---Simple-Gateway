@@ -70,22 +70,52 @@ if (isset($_POST['input'])) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($results) {
+        $count = 0;
         foreach ($results as $row) {
+            $count+=1;
             ?>
-            <tr>
-            <td class="id" ><?php echo $row['id'] ?></td>
+            <tr class="row" >
+                <td>#<?php echo $count ?></td>
+                <td class="id" ><?php echo $row['id'] ?></td>
                 <td class="username"><?php echo $row['username'] ?></td>
+                <td class="email"><?php echo $row['email'] ?></td>
+                <td class="create_at"><?php echo $row['create_at'] ?></td>
+                <td class="role"><?php echo $row['role'] ?></td>
+                <?php 
+                if($row['locked'] === 1){
+                    ?>
+                    <td>
+                    <input type="checkbox" checked disabled >
+                    </td>
+                    <?php
+                }
+                else{
+                    ?>
+                    <td>
+                    <input type="checkbox" disabled >
+                    </td>
+                    <?php
+                }
+                ?>
                 <td>
-                <button class="edit-button">Edit</button>
-                <button class="save-button" style="display:none;">Save</button>
+                <button class="edit edit-button">
+                <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
+                </button>
+                <button class="submit save-button" style="display:none;">
+                <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
+                </button>
                 </td>
             </tr>
             <?php
 
         }
-    } else {
+    }
+    else {
         ?>
                 <tr>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
                     <td class="n-a" >---</td>
                     <td class="n-a" >---</td>
                     <td class="n-a" >---</td>
@@ -101,13 +131,17 @@ if (isset($_POST['input'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the posted data
     $username = isset($_POST['username']) ? $_POST['username'] : "";
+    $email = isset($_POST['email']) ? $_POST['email'] : "";
+    $role = isset($_POST['role']) ? $_POST['role'] : "";
     $id =  isset($_POST['id']) ? $_POST['id'] : "";
 
     try {
         // Prepare the update statement
-        $sql = "UPDATE user SET username = :username WHERE id = :id";
+        $sql = "UPDATE user SET username = :username, email = :email, role = :role WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':role', $role);
         $stmt->bindParam(':id', $id);
 
         // Execute the statement

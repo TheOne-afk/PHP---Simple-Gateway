@@ -217,6 +217,9 @@ table{
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: none;
+    border: 0;
+    cursor: pointer;
 }
 .edit img{
     filter: brightness(0) saturate(100%) invert(16%) sepia(11%) saturate(3090%) hue-rotate(161deg) brightness(95%) contrast(91%);
@@ -484,4 +487,8 @@ option{
     background-color: var(--body-color);
     color: var(--secondary-color);
     font-weight: 500;
+}
+
+.search_row{
+    background-color: var(--body-color);
 }
