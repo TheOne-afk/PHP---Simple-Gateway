@@ -46,6 +46,7 @@ include '../utils/db.connection.php';
             </div>
         </div>
         <form class="main-container" method="POST" action="<?php echo $update_user ?>">
+            <div>
             <div class="dropdown">
                 <select name="num" id="num">
                 <option value="10">10</option>
@@ -55,7 +56,13 @@ include '../utils/db.connection.php';
                     <img src="../../../public/images/svg/filter.svg" alt="..." height="20" width="20">
                 </button>
             </div>
+            <div>
+                <input type="text" id="search" placeholder="Search">
+            </div>
+            </div>
             <div class="wrap" >
+                <table>
+                </table>
             <table>
                     <?php 
                         if($result){
@@ -73,7 +80,11 @@ include '../utils/db.connection.php';
                     <td>Action</td>
                 </tr>
                 </thead>
-                <tbody class="table-body">
+                        <?php
+                        }
+                        if(!isset($_POST['input'])){
+                            ?>
+                            <tbody class="table-body" id="searchresult">
                 <?php
                 $count = 1;
                             foreach($resultRecords as $row){
@@ -351,6 +362,8 @@ include '../utils/db.connection.php';
                         }
                         ?>
                         </tbody>
+                            <?php
+                        ?>
                         </table>
                         </div>
             
@@ -381,11 +394,31 @@ include '../utils/db.connection.php';
                 
             </div>
             </nav>
-            
             </form>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" >
+    /* Ajaw */
+    $(document).ready(function(){ // first it add a function to the document, means it is ready
+        $('#search').keyup(function(){ // getting the events in input, gettings the keys
+            let input = $(this).val(); // $(this) - this element | val() - get value
+            // alert(input);
 
+            if(input != ""){ // if the input is empty the perform this
+                $.ajax({ // and by using the ajax method is like a object
+                    url: "../utils/handle_admin_page.php", // direct to this page
+                    method: "POST", // and using the post method
+                    data: {input: input}, // with the data input
+
+                    success:function(data){ // after successfully 
+                        $('#searchresult').html(data) // then the data will display on this section
+                    }
+                })
+            }
+        })
+    })
+</script>
     
 </body>
 </html>
