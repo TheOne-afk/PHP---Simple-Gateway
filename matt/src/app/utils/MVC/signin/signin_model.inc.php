@@ -41,3 +41,4 @@ function user_freeze(object $pdo, string $username, int $count){
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result;
 }
+

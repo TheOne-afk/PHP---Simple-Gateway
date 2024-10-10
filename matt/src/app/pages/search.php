@@ -19,6 +19,9 @@ if (isset($_POST['input'])) {
             echo "<p>" . htmlspecialchars($row['username']) . "</p>";
         }
     } else {
+        ?>
+        t
+        <?php
         echo "<p>No results found</p>";
     }
 }

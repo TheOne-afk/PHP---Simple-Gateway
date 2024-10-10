@@ -338,7 +338,18 @@ if (isset($_POST['input'])) {
             <?php
         }
     } else {
-        echo "<p>No results found</p>";
+        ?>
+                <tr>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                    <td class="n-a" >---</td>
+                </tr>
+        <?php
     }
 }
 

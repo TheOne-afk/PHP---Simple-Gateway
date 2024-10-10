@@ -46,7 +46,7 @@ include '../utils/db.connection.php';
             </div>
         </div>
         <form class="main-container" method="POST" action="<?php echo $update_user ?>">
-            <div>
+            <div class="top-wrapper" >
             <div class="dropdown">
                 <select name="num" id="num">
                 <option value="10">10</option>
@@ -351,14 +351,6 @@ include '../utils/db.connection.php';
                                 <?php
                                 
                             }
-                        }
-                        
-                        else{
-                            ?>
-                            <tr>
-                                <td>No Record Found</td>
-                            </tr>
-                            <?php
                         }
                         ?>
                         </tbody>

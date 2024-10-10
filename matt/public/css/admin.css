@@ -458,3 +458,30 @@ option{
     
     cursor: grab;
 }
+
+#search{
+    outline: none;
+    border: 0;
+    font-size: .9rem;
+    padding: .4rem .5rem;
+    border-radius: 5px;
+    color: var(--secondary-color);
+    background-color: var(--body-color);
+}
+
+#search::placeholder{
+    color: var(--secondary-color)/30;
+}
+
+.top-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.n-a{
+    width: 100%;
+    background-color: var(--body-color);
+    color: var(--secondary-color);
+    font-weight: 500;
+}
