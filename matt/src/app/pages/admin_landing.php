@@ -393,6 +393,7 @@ include '../utils/db.connection.php';
 <script type="text/javascript" >
     /* Ajaw */
     $(document).ready(function(){ // first it add a function to the document, means it is ready
+       /* Search AJAX */
         $('#search').keyup(function(){ // getting the events in input, gettings the keys
             let input = $(this).val(); // $(this) - this element | val() - get value
             // alert(input);
@@ -409,6 +410,47 @@ include '../utils/db.connection.php';
                 })
             }
         })
+        /* Edit */
+        $(document).on("click", ".edit-button", function(event) { // add clicks to the edit button
+            event.preventDefault();
+            var $this = $(this);
+            // Find the username cell and replace its content with an input field
+            var $usernameCell = $this.closest("tr").find(".username");
+            var currentUsername = $usernameCell.text();
+
+            $usernameCell.html('<input type="text" id="inputUsername" value="' + currentUsername + '" />');
+            $this.hide(); // Hide the edit button
+            $this.siblings(".save-button").show(); // Show the save button
+        })
+
+        /* Saved */
+        $(document).on("click", ".save-button", function(event) {
+            event.preventDefault();
+            var $this = $(this);
+            var $usernameCell = $this.closest("tr").find(".username");
+            var newUsername = $usernameCell.find("input").val();
+            var userId = $this.closest("tr").find(".id").text(); // Get the user ID from the table
+            alert(newUsername);
+            // Send the new username and user ID to your server via AJAX
+            $.ajax({
+                url: '../utils/handle_admin_page.php', // Path to your PHP file
+                type: 'POST',
+                data: { username: newUsername, id: userId }, // Include user ID
+                dataType: 'json', // Expect a JSON response
+                success: function(response) {
+                    // Handle the response from the server
+                    console.log(response.message);
+                    // Update the username cell with the new value
+                    $usernameCell.html(newUsername);
+                    $this.hide(); // Hide the save button
+                    $this.siblings(".edit-button").show(); // Show the edit button
+                },
+                error: function(xhr) {
+                    // Handle errors
+                    console.error(xhr.responseJSON.message);
+                }
+            });
+        });
     })
 </script>
     
