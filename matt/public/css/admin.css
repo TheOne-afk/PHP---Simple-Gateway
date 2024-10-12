@@ -508,25 +508,3 @@ input[type="checkbox"]{
     gap: 10px;
 }
 
-/* Custom styles for the modal */
-.modal-header {
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white; /* White text */
-}
-
-.modal-footer {
-    justify-content: space-between; /* Space out buttons */
-}
-
-.modal-body {
-    font-size: 1em; /* Standard font size */
-}
-
-#confirmDelete {
-    background-color: #dc3545; /* Bootstrap danger color */
-    color: white; /* White text */
-}
-
-#confirmDelete:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
