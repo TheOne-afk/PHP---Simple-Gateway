@@ -17,7 +17,7 @@ include '../utils/db.connection.php';
     <div class="navbar">
         <div class="logo-container">
         <img src="../../../public/images/svg/ireland-coffee.svg" alt="user" height="35" width="35">
-            <a href="#">ADMIN</a>
+            <a href="#">ADIN</a>
         </div>
     </div>
     <div class="secondary-container">
