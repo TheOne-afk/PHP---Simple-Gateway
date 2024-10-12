@@ -120,12 +120,8 @@ $(document).ready(function(){ // first it add a function to the document, means 
                 },
                 dataType: 'json',
                 success: function(response) {
-                    alert(response.message); // Show success message
-                    if (response.message === 'Username updated successfully!') {
-                        // Optionally, remove the row from the table
-                        $this.closest("tr").remove(); // Remove the user row from the DOM
-                    }
-                },
+                       $this.closest("tr").remove()  // Remove the user row from the DOM
+                 },
                 error: function(xhr) {
                     console.error(xhr.responseJSON.message); // Handle errors
                     alert(xhr.responseJSON.message || "An error occurred. Please try again.");

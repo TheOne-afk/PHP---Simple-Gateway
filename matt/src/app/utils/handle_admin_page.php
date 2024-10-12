@@ -100,7 +100,9 @@ if (isset($_POST['input'])) {
                 <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
                 </button>
                 <!-- Delete Feature -->
-                 <button class="delete-button" >Delete</button>
+                 <button class="delete delete-button" >
+                 <img src="../../../public/images/svg/delete.svg" alt="..." height="23" width="23">
+                </button>
                 <!-- Submit Delete Feature -->
                  <button class="submit-delete-button" style="display:none;" >Submit</button>
                  </div>
