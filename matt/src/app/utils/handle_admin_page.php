@@ -88,13 +88,22 @@ if (isset($_POST['input'])) {
                     <input class="check" type="checkbox" disabled>
                 <?php } ?>
                 </td>
+                <!-- Actions -->
                 <td>
+                 <div class="action-container" >
+                           <!-- Edit Feature -->
                 <button class="edit edit-button">
                 <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
                 </button>
+                <!-- Save/Submit Feature -->
                 <button class="submit save-button" style="display:none;">
                 <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
                 </button>
+                <!-- Delete Feature -->
+                 <button class="delete-button" >Delete</button>
+                <!-- Submit Delete Feature -->
+                 <button class="submit-delete-button" style="display:none;" >Submit</button>
+                 </div>
                 </td>
             </tr>
             <?php
@@ -120,28 +129,49 @@ if (isset($_POST['input'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = isset($_POST['action']) ? $_POST['action'] : null;
     // Get the posted data
     $username = isset($_POST['username']) ? $_POST['username'] : "";
     $email = isset($_POST['email']) ? $_POST['email'] : "";
     $role = isset($_POST['role']) ? $_POST['role'] : "";
     $id =  isset($_POST['id']) ? $_POST['id'] : "";
     $check = isset($_POST['check']) && $_POST['check'] == 'true';
-
-    try {
-        // Prepare the update statement
-        if ($check) {
-            $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 1, attempt = 8 WHERE id = :id";
-        } else {
-            $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 0, attempt = 0 WHERE id = :id";
-        }
-
+    
+    if($action === 'update'){
+     
+         try {
+             // Prepare the update statement
+             if ($check) {
+                 $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 1, attempt = 8 WHERE id = :id";
+             } else {
+                 $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 0, attempt = 0 WHERE id = :id";
+             }
+     
+             $stmt = $pdo->prepare($sql);
+             $stmt->bindParam(':username', $username);
+             $stmt->bindParam(':email', $email);
+             $stmt->bindParam(':role', $role);
+             $stmt->bindParam(':id', $id);
+     
+             // Execute the statement
+             if ($stmt->execute()) {
+                 echo json_encode(['message' => 'Username updated successfully!']);
+                 exit;
+             } else {
+                 echo json_encode(['message' => 'Failed to update username.']);
+                 exit;
+             }
+         } catch (PDOException $e) {
+             echo json_encode(['message' => 'Error: ' . $e->getMessage()]);
+             exit;
+         }
+   }
+   if($action === 'delete'){
+    $id =  isset($_POST['id']) ? $_POST['id'] : "";
+    try{
+        $sql = "DELETE FROM user WHERE id = :userId";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
-        $stmt->bindParam(':id', $id);
-
-        // Execute the statement
+        $stmt->bindParam(':userId', $id);
         if ($stmt->execute()) {
             echo json_encode(['message' => 'Username updated successfully!']);
             exit;
@@ -149,10 +179,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['message' => 'Failed to update username.']);
             exit;
         }
-    } catch (PDOException $e) {
+
+    }
+    catch(PDOException $e){
         echo json_encode(['message' => 'Error: ' . $e->getMessage()]);
         exit;
     }
+   }
 }
 
 

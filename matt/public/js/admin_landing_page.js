@@ -75,7 +75,7 @@ $(document).ready(function(){ // first it add a function to the document, means 
  $.ajax({
      url: '../utils/handle_admin_page.php', // Path to your PHP file
      type: 'POST',
-     data: { username: newUsername, email: newEmail, role: newRole, id: userId, check:  isChecked ? 'true' : 'false' }, // Include user ID
+     data: { username: newUsername, email: newEmail, role: newRole, id: userId, check:  isChecked ? 'true' : 'false', action: 'update' }, // Include user ID
      dataType: 'json', // Expect a JSON response
      success: function(response) {
          // Update the username cell with the new value
@@ -91,4 +91,46 @@ $(document).ready(function(){ // first it add a function to the document, means 
  }
  });
 });
+/* Delete */
+    $(document).on('click', ".delete-button", function(event){
+        event.preventDefault();
+        var $this = $(this);
+        var $getTr = $this.closest("tr");
+        $getTr.find('.id').css('border-bottom', '4px solid #D24545');
+        $getTr.find('.username').css('border-bottom', '4px solid #D24545');
+        $getTr.find('.email').css('border-bottom', '4px solid #D24545');
+        $this.siblings('.edit-button').hide();
+        $this.hide();
+        $this.siblings('.submit-delete-button').show();
+    })
+    /* Submit Delete */
+    $(document).on('click', '.submit-delete-button', function(event) {
+        event.preventDefault(); // Prevent the default action
+        var $this = $(this);
+        var userId = $this.closest("tr").find(".id").text(); // Get the user ID from the table
+    
+        // Confirm deletion
+        if (confirm("Are you sure you want to delete this user?")) {
+            $.ajax({
+                url: '../utils/handle_admin_page.php', // Path to your PHP file
+                type: 'POST',
+                data: {
+                    action: 'delete',
+                    id: userId
+                },
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message); // Show success message
+                    if (response.message === 'Username updated successfully!') {
+                        // Optionally, remove the row from the table
+                        $this.closest("tr").remove(); // Remove the user row from the DOM
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseJSON.message); // Handle errors
+                    alert(xhr.responseJSON.message || "An error occurred. Please try again.");
+                }
+            });
+        }
+    });
  })
