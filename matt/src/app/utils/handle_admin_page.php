@@ -88,10 +88,10 @@ if (isset($_POST['input'])) {
                     <input class="check" type="checkbox" disabled>
                 <?php } ?>
                 </td>
-                <!-- Actions -->
+                <!-- Edit Actions -->
                 <td>
                  <div class="action-container" >
-                           <!-- Edit Feature -->
+                <!-- Edit Feature -->
                 <button class="edit edit-button">
                 <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
                 </button>
@@ -99,6 +99,10 @@ if (isset($_POST['input'])) {
                 <button class="submit save-button" style="display:none;">
                 <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
                 </button>
+                <!-- Cancel Feature -->
+                 <button class="cancel-button" style="display:none;" >cancel</button>
+                
+                <!-- Delete Action -->
                 <!-- Delete Feature -->
                  <button class="delete delete-button" >
                  <img src="../../../public/images/svg/delete.svg" alt="..." height="23" width="23">

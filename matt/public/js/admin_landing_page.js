@@ -36,6 +36,8 @@ $(document).ready(function(){ // first it add a function to the document, means 
          var currentCheck = $checkCell.is(":checked"); 
          $checkCell.prop('disabled', false); // Enable the checkbox
 
+         originalUsername = currentUsername;
+
          $usernameCell.html('<input type="text" class="edit-user" id="inputUsername" value="' + currentUsername + '" />');
          $emailCell.html('<input type="text" class="edit-email" id="inputEmail" value="' + currentEmail + '" />');
          $roleCell.html('<input type="text" class="edit-email" id="inputRole" value="' + currentRole + '" />');
@@ -44,8 +46,29 @@ $(document).ready(function(){ // first it add a function to the document, means 
          remove_enter_key($emailCell.find('#inputEmail'));
          remove_enter_key($roleCell.find('#inputRole'));
          $this.hide(); // Hide the edit button
+         $this.siblings('.delete-button').hide();
          $this.siblings(".save-button").show(); // Show the save button
+         $this.siblings('.cancel-button').show();
      })
+
+     $(document).on("click", ".cancel-button", function(event) {
+        event.preventDefault();
+        var $this = $(this);
+        var $row = $this.closest("tr");
+    
+        // Get the username cell
+        var $usernameCell = $row.find(".username");
+    
+        // Restore the username cell content back to the original
+        $usernameCell.html(originalUsername); // Set the original username back
+    
+        // Hide the cancel button and show the edit button
+        $this.hide();
+        $row.find('.edit-button').show();
+        $row.find('.save-button').hide();
+    });
+    
+
 
      function remove_enter_key(item){
          item.on('keydown', function(event){
@@ -91,6 +114,9 @@ $(document).ready(function(){ // first it add a function to the document, means 
  }
  });
 });
+
+
+
 /* Delete */
     $(document).on('click', ".delete-button", function(event){
         event.preventDefault();
