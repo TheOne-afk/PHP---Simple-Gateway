@@ -31,6 +31,11 @@ require_once '../utils/config.session.php';
                     echo "<span id='requriedValid' >Your account has been locked due to multiple failed login attempts. Please contact support to unlock your account.</span>";
                 }
             }
+            if(isset($_GET['tempo_lock'])){
+                if($_GET['tempo_lock'] == 'true'){
+                    echo "<span id='requriedValid' >Your account is temporarily locked due to multiple unsuccessful login attempts. Please wait try again later</span>";
+                }
+            }
             ?>
 
             <!-- Username -->

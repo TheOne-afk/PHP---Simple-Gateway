@@ -81,22 +81,13 @@ if (isset($_POST['input'])) {
                 <td class="email"><?php echo $row['email'] ?></td>
                 <td class="create_at"><?php echo $row['create_at'] ?></td>
                 <td class="role"><?php echo $row['role'] ?></td>
-                <?php 
-                if($row['locked'] === 1){
-                    ?>
-                    <td>
-                    <input type="checkbox" checked disabled >
-                    </td>
-                    <?php
-                }
-                else{
-                    ?>
-                    <td>
-                    <input type="checkbox" disabled >
-                    </td>
-                    <?php
-                }
-                ?>
+                <td>
+                <?php if ($row['locked'] == 1) { ?>
+                    <input class="checked" type="checkbox" checked disabled>
+                <?php } else { ?>
+                    <input class="check" type="checkbox" disabled>
+                <?php } ?>
+                </td>
                 <td>
                 <button class="edit edit-button">
                 <img src="../../../public/images/svg/edit-button.svg" alt="edit" height="23" width="23" >
@@ -134,10 +125,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = isset($_POST['email']) ? $_POST['email'] : "";
     $role = isset($_POST['role']) ? $_POST['role'] : "";
     $id =  isset($_POST['id']) ? $_POST['id'] : "";
+    $check = isset($_POST['check']) && $_POST['check'] == 'true';
 
     try {
         // Prepare the update statement
-        $sql = "UPDATE user SET username = :username, email = :email, role = :role WHERE id = :id";
+        if ($check) {
+            $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 1, attempt = 8 WHERE id = :id";
+        } else {
+            $sql = "UPDATE user SET username = :username, email = :email, role = :role, locked = 0, attempt = 0 WHERE id = :id";
+        }
+
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);

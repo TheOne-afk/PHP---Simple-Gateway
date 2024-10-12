@@ -25,9 +25,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         
         if($current_time < $unlock_time){
             user_freeze($pdo,$username,$result['attempt']);
+            header('Location: ../pages/signin.php?tempo_lock=true');
+            exit();
         }
         
-        if($result['attempt'] > 5){
+        if($result['attempt'] > 7){
             header('Location: ../pages/signin.php?locked=true');
             exit();
         }
@@ -49,22 +51,26 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         }
                                                 // field,     getting the column name of the user
         if((!is_username_wrong($result) && is_password_wrong($password, $result["password"])) ){
-                if($result['attempt'] < 3){
+            
+                     
+            if($result['attempt'] == 4){
                     get_attempt($pdo, $username, $result['attempt'] + 1);
                     $errors["login_error"] = "Incorrect password";
             }
-            if($result['locked'] === 1){
+            if($result['locked'] == 1){
                 user_freeze($pdo, $username, $result['attempt'] + 1);
                 $errors["login_error"] = "Incorrect password";
             }
+            if($result['locked'] == 0){
+                update_attempt($pdo, $username, $result['attempt'] + 1);
+                $errors["login_error"] = "Incorrect password";
+
+            }
+            
             
         }
         if((!is_username_wrong($result) && !is_password_wrong($password, $result["password"])) && $result['activation_token'] !== NULL ){
             $errors["login_error"] = "Account haven't been activate. Kindly check your email";
-        }
-
-        if($result['attempt'] >= 3){
-            $errors["login_error"] = "Your account is temporarily locked due to multiple unsuccessful login attempts. Please wait try again later";
         }
 
         if($errors){
@@ -74,7 +80,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         }
 
         
-        if($result['attempt'] <= 6){
+        if($result['attempt'] <= 8){
             $newSession = session_create_id();
             $sessionId = $newSession . "_" . $result["id"];
             session_id($sessionId);
