@@ -9,15 +9,14 @@ $update_user = user_table_actions($pdo);
 
 
 
-if(isset($_GET['page_no']) && $_GET['page_no'] !== ""){
-    $page_no = $_GET['page_no'];
+if (isset($_GET['page_no']) && $_GET['page_no'] !== "") {
+    $page_no = (int)$_GET['page_no'];
 } else {
     $page_no = 1;
 }
-$_SESSION['pages']  = 10;
-if(isset($_POST['filter'])){
-    $page_records = intval($_POST['num']);
-    $_SESSION['pages'] = $page_records;
+$_SESSION['pages']  = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 10; // Default to 10 rows;
+if (isset($_POST['filter'])) {
+    $_SESSION['pages'] = intval($_POST['num']); // Use this if filtering option changes rows per page
 }
 $total_records_per_page = $_SESSION['pages']; // default
 $offset = ($page_no - 1) * $total_records_per_page;
@@ -32,10 +31,22 @@ $total_records = $resultRec['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 
 // displaying the rows based on the limits
-$sql = "SELECT * FROM user LIMIT $offset, $total_records_per_page;";
+$sql = "SELECT * FROM user LIMIT :offset, :total_records_per_page";
 $stmt = $pdo->prepare($sql);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->bindValue(':total_records_per_page', $total_records_per_page, PDO::PARAM_INT);
 $stmt->execute();
 $resultRecords = $stmt->fetchAll();
+
+if ($resultRecords){
+    foreach($resultRecords as $row){
+        ?>
+        <tr>
+            <td><?= $row['id'] ?></td>
+        </tr>
+        <?php
+    }
+}
 
 if(isset($_POST['logout'])){
     session_start();
@@ -57,8 +68,10 @@ if(is_cancel()){
 if(user_table_actions($pdo)){
     return header("Location: admin_landing.php?page_no=".$page_no."&update=success");
 }
+
 if (isset($_POST['input'])) {
-    $inputData = $_POST['input'] . '%'; // Add wildcard for LIKE query
+    if(!empty(isset($_POST['input']))){
+        $inputData = $_POST['input'] . '%'; // Add wildcard for LIKE query
 
     // Prepare the SQL statement
     $sql = "SELECT * FROM user WHERE username LIKE :input";
@@ -100,7 +113,9 @@ if (isset($_POST['input'])) {
                 <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
                 </button>
                 <!-- Cancel Feature -->
-                 <button class="cancel-button" style="display:none;" >cancel</button>
+                 <button class="no cancel-button" style="display:none;" >
+                 <img src="../../../public/images/svg/close.svg" alt="..." height="23" width="23">
+                 </button>
                 
                 <!-- Delete Action -->
                 <!-- Delete Feature -->
@@ -109,8 +124,12 @@ if (isset($_POST['input'])) {
                 </button>
                 <!-- Submit Delete Feature -->
                  <button class="yes submit-delete-button" style="display:none;" >
-                 <img src="../../../public/images/svg/letter-y.svg" alt="..." height="23" width="23">
+                 <img src="../../../public/images/svg/check.svg" alt="..." height="23" width="23">
                 </button>
+                <!-- Delete Cancel Feature -->
+                <button class="no cancel-delete-button" style="display:none;" >
+                 <img src="../../../public/images/svg/close.svg" alt="..." height="23" width="23">
+                 </button>
                  </div>
                 </td>
             </tr>
@@ -131,6 +150,7 @@ if (isset($_POST['input'])) {
                     <td class="n-a" >---</td>
                 </tr>
         <?php
+    }
     }
 }
 

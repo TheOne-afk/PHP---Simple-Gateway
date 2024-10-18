@@ -508,3 +508,6 @@ input[type="checkbox"]{
     gap: 10px;
 }
 
+.edit-role{
+    width: 7rem;
+}

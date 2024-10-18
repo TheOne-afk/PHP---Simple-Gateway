@@ -15,9 +15,15 @@ $(document).ready(function(){ // first it add a function to the document, means 
                  }
              })
          }
-         else if(input == ""){
+         else{
              $.ajax({
-                 url: "../utils/handle_admin_page.php",
+                url: "../utils/handle_admin_page.php", // Request all data
+                method: "POST", // Still use POST for consistency
+                data: {input: ""}, // Send an empty input to signal showing all data
+    
+                success: function(data) { // On success
+                    $('#searchresult').html(data); // Display all the table data
+                }
              })
          }
      })
@@ -37,10 +43,13 @@ $(document).ready(function(){ // first it add a function to the document, means 
          $checkCell.prop('disabled', false); // Enable the checkbox
 
          originalUsername = currentUsername;
+         originalEmail = currentEmail;
+         originalRole= currentRole;
+         originalCheck = currentCheck;
 
          $usernameCell.html('<input type="text" class="edit-user" id="inputUsername" value="' + currentUsername + '" />');
          $emailCell.html('<input type="text" class="edit-email" id="inputEmail" value="' + currentEmail + '" />');
-         $roleCell.html('<input type="text" class="edit-email" id="inputRole" value="' + currentRole + '" />');
+         $roleCell.html('<input type="text" class="edit-email edit-role" id="inputRole" value="' + currentRole + '" />');
          $checkCell.prop("checked", currentCheck);
          remove_enter_key($usernameCell.find('#inputUsername'));
          remove_enter_key($emailCell.find('#inputEmail'));
@@ -58,14 +67,22 @@ $(document).ready(function(){ // first it add a function to the document, means 
     
         // Get the username cell
         var $usernameCell = $row.find(".username");
-    
+        var $emailCell = $row.find(".email");
+        var $roleCell = $row.find(".role");
+        var $roleCheck= $row.find("input[type='checkbox']");
+
         // Restore the username cell content back to the original
         $usernameCell.html(originalUsername); // Set the original username back
+        $emailCell.html(originalEmail);
+        $roleCell.html(originalRole);
+        $roleCheck.html(originalCheck);
     
         // Hide the cancel button and show the edit button
         $this.hide();
         $row.find('.edit-button').show();
         $row.find('.save-button').hide();
+        $this.siblings('.delete-button').show();
+        $roleCheck.prop('disabled', true);
     });
     
 
@@ -93,6 +110,8 @@ $(document).ready(function(){ // first it add a function to the document, means 
  var newRole = $this.closest("tr").find("#inputRole").val();
  var userId = $this.closest("tr").find(".id").text(); // Get the user ID from the table
  var isChecked = $checkCell.is(":checked"); // find the input that has type checkbox and then find if is checked
+ $this.siblings('.cancel-button').hide();
+ $this.siblings('.delete-button').show();
 
  // Send the new username and user ID to your server via AJAX
  $.ajax({
@@ -128,6 +147,7 @@ $(document).ready(function(){ // first it add a function to the document, means 
         $this.siblings('.edit-button').hide();
         $this.hide();
         $this.siblings('.submit-delete-button').show();
+        $this.siblings('.cancel-delete-button').show();
     })
     /* Submit Delete */
     $(document).on('click', '.submit-delete-button', function(event) {
@@ -155,4 +175,104 @@ $(document).ready(function(){ // first it add a function to the document, means 
             });
         }
     });
+
+    $(document).on('click', '.cancel-delete-button', function(event){
+        event.preventDefault()
+        var $this = $(this)
+        var tr = $this.closest("tr")
+
+        var $usernameCell = tr.find('.username')
+        var $idCell = tr.find('.id')
+        var $emailCell = tr.find('.email')
+
+        $idCell.css('border-bottom', '0');
+        $emailCell.css('border-bottom', '0');
+        $usernameCell.css('border-bottom', '0');
+
+        
+        $this.siblings('.submit-delete-button').hide();
+        $this.hide();
+        $this.siblings('.edit-button').show();
+        $this.siblings('.delete-button').show();
+
+
+    })
+
+    function loadRows(rowCount) {
+        $.ajax({
+            url: "../utils/handle_admin_page.php", // Path to your PHP script
+            method: "POST",
+            data: { rowCount: rowCount }, // Send the row count as a parameter
+            success: function(data) {
+                $('table tbody').html(data); // Populate table body with returned data
+            }
+        });
+    }
+
+     // Function to fetch table data based on rows per page and current page number
+     function fetchTableData(page_no, rowsPerPage) {
+        $.ajax({
+            url: "../utils/handle_admin_page.php", // Server-side script
+            method: "POST",
+            data: { page_no: page_no, rowsPerPage: rowsPerPage }, // Send the current page and rows per page to PHP
+            success: function(data) {
+                $('table').html(data); // Populate the table
+            }
+        });
+    }
+
+    // Function to fetch pagination links based on the current page and row count
+    function fetchPaginationLinks(page_no, rowsPerPage) {
+        $.ajax({
+            url: "../utils/handle_pagination.php", // Separate script for pagination logic
+            method: "POST",
+            data: { page_no: page_no, rowsPerPage: rowsPerPage },
+            success: function(data) {
+                $('.pagination').html(data); // Display pagination links
+            }
+        });
+    }
+
+     // Handle pagination click
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let page_no = $(this).data('page'); // Get the page number from the clicked link
+
+        if (!$(this).hasClass('disabled')) { // Prevent action if 'disabled'
+            fetchTableData(page_no, rowsPerPage); // Fetch new data
+        }
+    });
+
+     // Handle pagination click
+     $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let page_no = $(this).data('page'); // Get the page number from the clicked link
+
+        if (!$(this).hasClass('disabled')) { // Prevent action if 'disabled'
+            fetchTableData(page_no, rowsPerPage); // Fetch new data
+        }
+    });
+
+    $('#rowCount').change(function(){
+        let selectedValue = $(this).val()
+        loadRows(selectedValue)
+    })
+    loadRows(10)
+    let currentPage = 1;
+    let rowsPerPage = $('#rowCount').val();
+    fetchTableData(currentPage, rowsPerPage);
+        fetchPaginationLinks(currentPage, rowsPerPage);
+
+        $('#rowCount').change(function() {
+            rowsPerPage = $(this).val();
+            currentPage = 1; // Reset to page 1 when changing row count
+            fetchTableData(currentPage, rowsPerPage);
+            fetchPaginationLinks(currentPage, rowsPerPage);
+        });
+        $(document).on('click', '.pagination-link', function(e) {
+            e.preventDefault();
+            currentPage = $(this).data('page'); // Get the selected page number
+            fetchTableData(currentPage, rowsPerPage);
+            fetchPaginationLinks(currentPage, rowsPerPage);
+        });
  })
