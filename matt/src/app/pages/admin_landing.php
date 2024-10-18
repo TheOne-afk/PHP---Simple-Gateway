@@ -17,7 +17,7 @@ include '../utils/db.connection.php';
     <div class="navbar">
         <div class="logo-container">
         <img src="../../../public/images/svg/ireland-coffee.svg" alt="user" height="35" width="35">
-            <a href="#">ADIN</a>
+            <a href="#">ADMIN</a>
         </div>
     </div>
     <div class="secondary-container">
@@ -33,6 +33,12 @@ include '../utils/db.connection.php';
                 <div class="option-container selected">
                 <img src="../../../public/images/svg/profile.svg" alt="user" height="30" width="30">
                 <a href="#">Users</a>
+                </div>
+            </div>
+            <div>
+                <div class="option-container">
+                <img src="../../../public/images/svg/profile.svg" alt="user" height="30" width="30">
+                <a href="../pages/admin_landing_logs.php">Audit logs</a>
                 </div>
             </div>
             </div>
@@ -61,8 +67,6 @@ include '../utils/db.connection.php';
             </div>
             </div>
             <div class="wrap" >
-                <table>
-                </table>
             <table>
                     <?php 
                         if($result){

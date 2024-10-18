@@ -73,7 +73,6 @@ function is_yes(object $pdo){
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $userGet = $_SESSION['userGet'];
-        echo "<script>alert(". $userGet .")</script>";
         
         $sqlqs = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$userGet','user_deleted',NOW()) ";
         $pdo->exec($sqlqs);

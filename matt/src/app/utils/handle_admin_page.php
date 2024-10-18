@@ -189,13 +189,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    if($action === 'delete'){
     $id =  isset($_POST['id']) ? $_POST['id'] : "";
     try{
-        $sql = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$username','user_deleted',NOW()) ";
-        $pdo->exec($sql);
         $sql = "DELETE FROM user WHERE id = :userId";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userId', $id);
+        $user = $pdo->query("SELECT * FROM user WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['userGet'] = $user['username'];
         if ($stmt->execute()) {
             echo json_encode(['message' => 'Username updated successfully!']);
+
+            $username = $_SESSION['userGet'];
+            
+            $sql = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$username','user_deleted',NOW()) ";
+            $pdo->exec($sql);
             exit;
         } else {
             echo json_encode(['message' => 'Failed to update username.']);
