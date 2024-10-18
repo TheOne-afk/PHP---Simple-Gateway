@@ -62,6 +62,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 die();
             }
 
+            $sql = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$username','user_signup',NOW()) ";
+                $pdo->exec($sql);
+
             $errors["user_created"] = "The user has been successfully created. Kindly check your email for activation";
             setUser($pdo, $username, $email, $password, $activation_token_hash);
 

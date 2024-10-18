@@ -88,15 +88,24 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             // outputing the data from the user to the client side.
             if($result['role'] === 'user'){
                 $_SESSION["user_id"] = $result["id"];
+                 // Create the SQL statement
+                 $sql = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$username','user_login',NOW()) ";
+                 // fast wau to execute this dont have a security
+                 $pdo->exec($sql);
             }
             if($result['role'] === 'admin'){
                 $_SESSION["admin_id"] = $result["id"];
+                $sql = "INSERT INTO audit_logs (username, action, timestamp) VALUES ('$username','admin_login',NOW()) ";
+                $pdo->exec($sql);
             }
     
             
             $_SESSION["user_email"] = htmlspecialchars($result["email"]);
             // every 30mins updated the session again
             $_SESSION["last_regeneration"] = time();
+
+
+
             header("Location: ../pages/landing.php?".$sessionId."");
             $pdo = null;
             $stmt = null;

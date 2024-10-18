@@ -198,81 +198,22 @@ $(document).ready(function(){ // first it add a function to the document, means 
 
     })
 
-    function loadRows(rowCount) {
+
+    $(document).on('click', '.yes', function() {
+        // Get the username from the td in the same row
+        const username = $(this).closest('tr').find('.username').text();
+        alert(username)
+
+        // Send the username to the PHP backend using AJAX
         $.ajax({
-            url: "../utils/handle_admin_page.php", // Path to your PHP script
-            method: "POST",
-            data: { rowCount: rowCount }, // Send the row count as a parameter
-            success: function(data) {
-                $('table tbody').html(data); // Populate table body with returned data
+            url: '../utils/handle_admin_page.php', // Replace with the path to your PHP file
+            type: 'POST',
+            data: { username: username },
+            success: function(response) {
+                // Handle the response from the server if needed
+                console.log(response);
             }
         });
-    }
-
-     // Function to fetch table data based on rows per page and current page number
-     function fetchTableData(page_no, rowsPerPage) {
-        $.ajax({
-            url: "../utils/handle_admin_page.php", // Server-side script
-            method: "POST",
-            data: { page_no: page_no, rowsPerPage: rowsPerPage }, // Send the current page and rows per page to PHP
-            success: function(data) {
-                $('table').html(data); // Populate the table
-            }
-        });
-    }
-
-    // Function to fetch pagination links based on the current page and row count
-    function fetchPaginationLinks(page_no, rowsPerPage) {
-        $.ajax({
-            url: "../utils/handle_pagination.php", // Separate script for pagination logic
-            method: "POST",
-            data: { page_no: page_no, rowsPerPage: rowsPerPage },
-            success: function(data) {
-                $('.pagination').html(data); // Display pagination links
-            }
-        });
-    }
-
-     // Handle pagination click
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        let page_no = $(this).data('page'); // Get the page number from the clicked link
-
-        if (!$(this).hasClass('disabled')) { // Prevent action if 'disabled'
-            fetchTableData(page_no, rowsPerPage); // Fetch new data
-        }
     });
 
-     // Handle pagination click
-     $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        let page_no = $(this).data('page'); // Get the page number from the clicked link
-
-        if (!$(this).hasClass('disabled')) { // Prevent action if 'disabled'
-            fetchTableData(page_no, rowsPerPage); // Fetch new data
-        }
-    });
-
-    $('#rowCount').change(function(){
-        let selectedValue = $(this).val()
-        loadRows(selectedValue)
-    })
-    loadRows(10)
-    let currentPage = 1;
-    let rowsPerPage = $('#rowCount').val();
-    fetchTableData(currentPage, rowsPerPage);
-        fetchPaginationLinks(currentPage, rowsPerPage);
-
-        $('#rowCount').change(function() {
-            rowsPerPage = $(this).val();
-            currentPage = 1; // Reset to page 1 when changing row count
-            fetchTableData(currentPage, rowsPerPage);
-            fetchPaginationLinks(currentPage, rowsPerPage);
-        });
-        $(document).on('click', '.pagination-link', function(e) {
-            e.preventDefault();
-            currentPage = $(this).data('page'); // Get the selected page number
-            fetchTableData(currentPage, rowsPerPage);
-            fetchPaginationLinks(currentPage, rowsPerPage);
-        });
  })
